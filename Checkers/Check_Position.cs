@@ -67,13 +67,21 @@ namespace AATF
             int i = 0;
             int a_ratings = 0;
             int a_position = 0;
+            int a_position2 = 0;
 
             for(i=0;i<13;i++)
             {
                 if(line.PosRats[i] == 2)
                 {
                     a_ratings++;
-                    a_position = i;
+                    if (a_position == 0)
+                    {
+                        a_position = i;
+                    }
+                    else
+                    {
+                        a_position2 = i;
+                    }
                 }
                 else if(line.PosRats[i] == 1)
                 {
@@ -99,7 +107,7 @@ namespace AATF
                 Console.WriteLine(line.id + "\t" + line.name + " has no proficiency in any position");
                 variables.errors++;
             }
-            else if(a_ratings >= 2)
+            else if(a_ratings >= 2 && !is_manlet(line.height))
             {
                 // Player has an A rating in more than 1 position
                 Console.WriteLine(line.id + "\t" + line.name + " has proficiency in more than one position");
@@ -107,36 +115,83 @@ namespace AATF
             }
             else // a_ratings == 1
             {
-                // Check if the only A rating is the registered position
-                if(line.position != a_position)
+                if (is_manlet(line.height))
                 {
-                    Console.WriteLine(line.id + "\t" + line.name + " is registered in position " + Position_Lookup(line.position) + " but has an A Rating in " + Position_Lookup(a_position));
-                    variables.errors++;
-                }
-                else
-                {
-                    // Setup the player position type
-                    if(line.position == 0)
+                    if(a_ratings > 2)
                     {
-                        line.is_goalkeeper = true;
-                    }
-                    else if((line.position >= 1) && (line.position <= 3))
-                    {
-                        line.is_defender = true;
-                    }
-                    else if((line.position >= 4) && (line.position <= 8))
-                    {
-                        line.is_midfielder = true;
-                    }
-                    else if ((line.position >= 9) && (line.position <= 12))
-                    {
-                        line.is_striker = true;
+                        // Manlet has an A rating in more than 2 position
+                        Console.WriteLine(line.id + "\t" + line.name + " has proficiency in more than two positions");
+                        variables.errors++;
                     }
                     else
                     {
-                        // Oh shit nigga what are you doing
-                        Console.WriteLine(line.id + "\t" + line.name + " has an invalid registered position");
+                        // Check if the only A rating is the registered position
+                        if (line.position != a_position || line.position != a_position2)
+                        {
+                            Console.WriteLine(line.id + "\t" + line.name + " is registered in position " + Position_Lookup(line.position) + " but has an A Rating in " + Position_Lookup(a_position) + " and " + Position_Lookup(a_position2));
+                            variables.errors++;
+                        }
+                        else
+                        {
+                            // Setup the player position type
+                            if (line.position == 0)
+                            {
+                                line.is_goalkeeper = true;
+                            }
+                            else if ((line.position >= 1) && (line.position <= 3))
+                            {
+                                line.is_defender = true;
+                            }
+                            else if ((line.position >= 4) && (line.position <= 8))
+                            {
+                                line.is_midfielder = true;
+                            }
+                            else if ((line.position >= 9) && (line.position <= 12))
+                            {
+                                line.is_striker = true;
+                            }
+                            else
+                            {
+                                // Oh shit nigga what are you doing
+                                Console.WriteLine(line.id + "\t" + line.name + " has an invalid registered position");
+                                variables.errors++;
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    // Check if the only A rating is the registered position
+                    if (line.position != a_position)
+                    {
+                        Console.WriteLine(line.id + "\t" + line.name + " is registered in position " + Position_Lookup(line.position) + " but has an A Rating in " + Position_Lookup(a_position));
                         variables.errors++;
+                    }
+                    else
+                    {
+                        // Setup the player position type
+                        if (line.position == 0)
+                        {
+                            line.is_goalkeeper = true;
+                        }
+                        else if ((line.position >= 1) && (line.position <= 3))
+                        {
+                            line.is_defender = true;
+                        }
+                        else if ((line.position >= 4) && (line.position <= 8))
+                        {
+                            line.is_midfielder = true;
+                        }
+                        else if ((line.position >= 9) && (line.position <= 12))
+                        {
+                            line.is_striker = true;
+                        }
+                        else
+                        {
+                            // Oh shit nigga what are you doing
+                            Console.WriteLine(line.id + "\t" + line.name + " has an invalid registered position");
+                            variables.errors++;
+                        }
                     }
                 }
             }
@@ -194,6 +249,18 @@ namespace AATF
                 Console.WriteLine(squad.team_name + " has too few Strikers (Has " + strikers + ", should have at least " + constants.positions_minimum_fw + ")");
                 variables.errors++;
             }
+        }
+
+        public static bool is_manlet(int height)
+        {
+            bool manlet = false;
+
+            if (height >= constants.height_bracket_6 && height < constants.height_bracket_5)
+            {
+                manlet = true;
+            }
+
+            return manlet;
         }
     }
 }

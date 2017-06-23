@@ -62,6 +62,13 @@ namespace AATF
                         Console.WriteLine(line.id + "\t" + line.name + " has CAPTAINCY");
                         squad.captains++;
                     }
+                    else if ((total_cards == constants.cards_limit_silver + 1) && contains_trick_card(line.Cards_Skills)) {
+                        Console.WriteLine(line.id + "\t" + line.name + " has free trick.");
+                    }
+                    else if ((total_cards == constants.cards_limit_silver + 2) && contains_trick_card(line.Cards_Skills) && captaincy)
+                    {
+                        Console.WriteLine(line.id + "\t" + line.name + " has free trick and CAPTAINCY.");
+                    }
                     else
                     {
                         Console.WriteLine(line.id + "\t" + line.name + " has too many Cards (Has " + total_cards + ", can only have " + constants.cards_limit_silver + " max)");
@@ -77,6 +84,14 @@ namespace AATF
                     {
                         Console.WriteLine(line.id + "\t" + line.name + " has CAPTAINCY");
                         squad.captains++;
+                    }
+                    else if ((total_cards == constants.cards_limit_gold + 1) && contains_trick_card(line.Cards_Skills))
+                    {
+                        Console.WriteLine(line.id + "\t" + line.name + " has free trick.");
+                    }
+                    else if ((total_cards == constants.cards_limit_gold + 2) && contains_trick_card(line.Cards_Skills) && captaincy)
+                    {
+                        Console.WriteLine(line.id + "\t" + line.name + " has free trick and CAPTAINCY.");
                     }
                     else
                     {
@@ -112,6 +127,31 @@ namespace AATF
                 Console.WriteLine(squad.team_name + " has more than one player with an additional Captaincy card, and so are above the card limit");
                 variables.errors++;
             }
+        }
+
+        public static bool contains_trick_card(int[] cards_skills)
+        {
+            bool trick_found = false;
+
+            for(int i = 0; i < cards_skills.Count();i++) {
+
+                int skillindex = -1;
+
+                if(cards_skills[i] == 1)
+                {
+                    skillindex = i;
+                }
+
+                if ((skillindex >= 0 && skillindex <= 6) || skillindex == 16)
+                {
+                    trick_found = true;
+                }
+
+                if (trick_found)
+                    break;
+            }
+
+            return trick_found;
         }
     }
 }
