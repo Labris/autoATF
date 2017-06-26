@@ -142,13 +142,11 @@ namespace AATF
                     skillindex = i;
                 }
 
-                if ((skillindex >= 0 && skillindex <= 6) || skillindex == 16)
+                if ((skillindex >= 0 && skillindex <= 5) || skillindex == 16)
                 {
                     trick_found = true;
-                }
-
-                if (trick_found)
                     break;
+                }
             }
 
             return trick_found;

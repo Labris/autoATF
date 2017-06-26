@@ -68,6 +68,7 @@ namespace AATF
             int a_ratings = 0;
             int a_position = 0;
             int a_position2 = 0;
+            
 
             for(i=0;i<13;i++)
             {
@@ -255,7 +256,7 @@ namespace AATF
         {
             bool manlet = false;
 
-            if (height >= constants.height_bracket_6 && height < constants.height_bracket_5)
+            if (height < constants.height_bracket_5)
             {
                 manlet = true;
             }
